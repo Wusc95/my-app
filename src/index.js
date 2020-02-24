@@ -31,21 +31,20 @@ function withMouse(Comp) {
 			// 	</div>
 			// )
 
-			return <Comp {...this.state}/>
+			return <Comp {...this.state} {...this.props}/>
 		}
 	}
-
 	return Mouse;
 }
 
 
 function Cat(props) {
-	return <img src={cat} alt='猫' style={{ position: 'fixed', left: (props.x - 40) + 'px', top: (props.y - 50) + 'px' }} />
+	return <img src={cat} alt={props.sAlt} style={{ position: 'fixed', left: (props.x - 40) + 'px', top: (props.y - 50) + 'px' }} />
 }
 
 // 使用高阶组件
 let MouseCat = withMouse(Cat)
 
-ReactDOM.render(<MouseCat />, document.getElementById('root'));
+ReactDOM.render(<MouseCat sAlt='这是一只猫' />, document.getElementById('root'));
 
 
