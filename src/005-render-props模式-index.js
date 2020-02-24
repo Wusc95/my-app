@@ -27,7 +27,8 @@ class Mouse extends Component {
 		// 	</div>
 		// )
 
-		return this.props.move(this.state)
+		// return this.props.move(this.state)
+		return this.props.children(this.state)
 	}
 }
 
@@ -35,6 +36,7 @@ function Cat(props) {
 	return <img src={cat} alt='猫' style={{position:'fixed',left:(props.x-40)+'px',top:(props.y-50)+'px'}}/>
 	// return <img src={ cat } alt='猫'/>
 }
-ReactDOM.render(<Mouse move={(mouse)=>{return <Cat x={mouse.x} y={mouse.y} />}} />, document.getElementById('root'));
+// ReactDOM.render(<Mouse move={(mouse)=>{return <Cat x={mouse.x} y={mouse.y} />}} />, document.getElementById('root'));
+ReactDOM.render(<Mouse>{mouse=> <Cat {...mouse} />}</Mouse>, document.getElementById('root'));
 
 
