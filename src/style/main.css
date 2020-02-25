@@ -5,7 +5,18 @@ a {
 a:hover {
     color: brown;
 }
+.active{
+    color:red;
+    position: relative;
+}
 
+.active::before{
+    content:'<';
+    position:absolute;
+    left:20px;
+    top:15px;
+    transform:rotate(90deg);
+}
 .wrap {
     position: fixed;
     left: 0;
