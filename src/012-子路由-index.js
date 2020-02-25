@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
 import './style/main.css'
 
+let isLogin = true;
 class App extends Component {
     render() {
         return (
@@ -13,7 +14,11 @@ class App extends Component {
         )
     }
 }
-
+function NoLogin(){
+    return (
+        <p>未登录，请先登录</p>
+    )
+}
 class Login extends Component {
     render() {
         return (
@@ -45,7 +50,14 @@ class Main extends Component {
                     </ul>
                 </div>
                 <div className='content'>
-                    <Route exact path='/main' component={con01}></Route>
+                    <Route exact path='/main' render={()=>{
+                        if(isLogin){
+                            return <con01 />
+                        }else {
+                            return <NoLogin />
+
+                        }
+                    }}></Route>
                     <Route path='/main/con02' component={con02}></Route>
                     <Route path='/main/con03' component={con03}></Route>
                 </div>
