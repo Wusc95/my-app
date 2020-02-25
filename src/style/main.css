@@ -5,3 +5,39 @@ a {
 a:hover {
     color: brown;
 }
+
+.wrap {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 15%;
+    background-color: #f80;
+}
+.content {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 84.5%;
+    background-color: lightblue;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+li {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
