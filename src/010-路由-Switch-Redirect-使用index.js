@@ -14,16 +14,7 @@ function Page02() {
 }
 function Page03() {
     return (
-        <ul>
-            <Link to='/page04/001'>课程1</Link>
-            <Link to='/page04/002'>课程2</Link>
-            <Link to='/page04/003'>课程3</Link>
-        </ul>
-    )
-}
-function Page04(props) {
-    return (
-    <h1>课程详情页,课程id:{props.match.params.courseId}</h1>
+        <h1>页面内容三</h1>
     )
 }
 function NotFound(){
@@ -43,7 +34,6 @@ class App extends Component {
                     <Route exact path="/page01" component={Page01}></Route>
                     <Route path="/page02" component={Page02}></Route>
                     <Route path="/page03" component={Page03}></Route>
-                    <Route path="/page04/:courseId" component={Page04}></Route>
 
                     <Redirect exact from='/' to='/page01'/>
                     <Route component={NotFound}></Route>
