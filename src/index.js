@@ -1,83 +1,74 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
-import './style/main.css'
+import './style/todolist.css'
 
-let isLogin = false;
-class App extends Component {
-    render() {
-        return (
-            <HashRouter>
-                    <Route exact path='/' component={Login}></Route>
-                    <Route path='/main' component={Main}></Route>
-            </HashRouter>
-        )
+// 导入数仓库
+import store from './store/index.js'
+// 导入list组件
+import List from './component/list'
+// 导入Top组件
+import Top from './component/top'
+class ToDoList extends Component {
+    constructor(props){
+        super(props);
+        this.state = store.getState()
+
+        // 组件初始化的时候开启订阅模式
+        this.unsubscribe=store.subscribe(this.fnStoreChange)
     }
-}
-function NoLogin(){
-    return (
-        <p>未登录，请先登录</p>
-    )
-}
-class Login extends Component {
+    // 数据仓库更改好调用的方法
+    fnStoreChange=()=>{
+        this.setState(store.getState())
+    }
+    fnChange=(e)=>{
+        // 定义一个数据工单
+        let action = {
+            type:'change_val',
+            value:e.target.value
+        }
+        //提交工单 通过store.dispatch
+        store.dispatch(action)
+    }
+    fnAdd=()=>{
+        let action = {
+            type:'add_val'
+        }
+        store.dispatch(action)
+    }
+    fnDel=(indx)=>{
+        let action = {
+            type:'del_val',
+            value:indx
+        }
+
+        store.dispatch(action)
+    }
+    // 组件销毁时调用的
+    componentWillUnmount(){
+        this.unsubscribe();
+    }
     render() {
+        let {aList,sTodo} = this.state
         return (
-            <div>
-                <h2>登录页</h2>
-                <p>
-                    <label>用户名:</label>
-                    <input type='text' />
-                </p>
-                <p>
-                    <label>密&nbsp;&nbsp;&nbsp;码:</label>
-                    <input type='password' />
-                </p>
-                <input type='button' value='登陆' onClick={() => { this.props.history.push('/main') }} />
+            <div className="list_con">
+                <h2>To do list</h2>
+                <input type="text" name="" value={sTodo} onChange={this.fnChange} className="inputtxt" />
+                <input type="button" name="" value="增加" id="btn1" className="inputbtn" onClick={this.fnAdd}/>
+
+                <ul id="list" className="list">
+                    {
+                        aList.map((item,i)=>{
+                            return <li key={i}><span>{item}</span><a href="#" className="del" onClick={()=>{this.fnDel(i)}}>删除</a></li>
+                        })
+                    }
+
+                </ul>
+
             </div>
         )
     }
 }
 
-class Main extends Component {
-    render() {
-        return (
-            <div className='wrap'>
-                <div className='menu'>
-                    <ul>
-                        <li><Link to='/main' >课程1</Link></li>
-                        <li><Link to='/main/con02' >课程2</Link></li>
-                        <li><Link to='/main/con03' >课程3</Link></li>
-                    </ul>
-                </div>
-                <div className='content'>
-                    <Route exact path='/main' render={()=>{
-                        if(isLogin){
-                            return <Con01 />
-                        }else {
-                            return <NoLogin />
+ReactDOM.render(<ToDoList />, document.getElementById('root'));
 
-                        }
-                    }}></Route>
-                    <Route path='/main/con02' component={Con02}></Route>
-                    <Route path='/main/con03' component={Con03}></Route>
-                </div>
-            </div>
-        )
-    }
-}
-function Con01(){
-    return (
-        <p>aaaaaaaaaaaaaa01</p>
-    )
-}
-function Con02(){
-    return (
-        <p>aaaaaaaaaaaaaa02</p>
-    )
-}
-function Con03(){
-    return (
-        <p>aaaaaaaaaaaaaa03</p>
-    )
-}
-ReactDOM.render(<App />, document.getElementById('root'))
+
