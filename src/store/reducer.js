@@ -1,25 +1,37 @@
+import {CHANGE_VAL,ADD_VAL,DEL_VAL,INIT_DATA} from './actionType'
 let oDefaultState={
-    aList:['学习html','学习css','学习javascript'],
+    aList:[],
     sTodo:''
 }
 
 let reducer = (state=oDefaultState,action)=>{
     // 接收一个修改数据的工单
-    if(action.type === 'change_val'){
+    if(action.type === INIT_DATA){
+        return action.value
+    }
+
+    if(action.type === CHANGE_VAL){
         let oNewState = JSON.parse(JSON.stringify(state))
 
         oNewState.sTodo = action.value;
         return oNewState;
     }
 
-    if(action.type === 'add_val'){
+    if(action.type === ADD_VAL){
         let oNewState = JSON.parse(JSON.stringify(state))
-        oNewState.aList.unshift(oNewState.sTodo)
+
+        if(oNewState.sTodo.trim()===''){
+            alert('请输入关键字')
+            oNewState.sTodo=''
+            return oNewState;
+        }
+
+        oNewState.aList.unshift(oNewState.sTodo.trim())
         oNewState.sTodo=''
         return oNewState;
     }
 
-    if(action.type === 'del_val'){
+    if(action.type === DEL_VAL){
         let oNewState = JSON.parse(JSON.stringify(state))
         oNewState.aList.splice(action.value,1)
 

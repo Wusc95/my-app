@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './style/todolist.css'
 
+// 导入axios
+import axios from 'axios'
 // 导入数仓库
 import store from './store/index.js'
 // 导入list组件
 import List from './component/list'
 // 导入Top组件
 import Top from './component/top'
+
+import {CHANGE_VAL,ADD_VAL,DEL_VAL,INIT_DATA} from './store/actionType'
 class ToDoList extends Component {
     constructor(props){
         super(props);
@@ -16,6 +20,15 @@ class ToDoList extends Component {
         // 组件初始化的时候开启订阅模式
         this.unsubscribe=store.subscribe(this.fnStoreChange)
     }
+    // 在页面渲染的时候，请求接口iuhuoqu数据
+    componentDidMount(){
+        axios.get('/data.json').then(dat=>{
+            store.dispatch({
+                type:INIT_DATA,
+                value:dat.data
+            })
+        })
+    }
     // 数据仓库更改好调用的方法
     fnStoreChange=()=>{
         this.setState(store.getState())
@@ -23,7 +36,7 @@ class ToDoList extends Component {
     fnChange=(e)=>{
         // 定义一个数据工单
         let action = {
-            type:'change_val',
+            type:CHANGE_VAL,
             value:e.target.value
         }
         //提交工单 通过store.dispatch
@@ -31,13 +44,13 @@ class ToDoList extends Component {
     }
     fnAdd=()=>{
         let action = {
-            type:'add_val'
+            type:ADD_VAL
         }
         store.dispatch(action)
     }
     fnDel=(indx)=>{
         let action = {
-            type:'del_val',
+            type:DEL_VAL,
             value:indx
         }
 
