@@ -1,43 +1,41 @@
-import {CHANGE_VAL,ADD_VAL,DEL_VAL,INIT_DATA} from './actionType'
-let oDefaultState={
-    aList:[],
-    sTodo:''
-}
 
-let reducer = (state=oDefaultState,action)=>{
-    // 接收一个修改数据的工单
-    if(action.type === INIT_DATA){
-        return action.value
-    }
+let reducer = (state = [], action) => {
+    if (action.type === 'add_goods') {
 
-    if(action.type === CHANGE_VAL){
         let oNewState = JSON.parse(JSON.stringify(state))
-
-        oNewState.sTodo = action.value;
-        return oNewState;
-    }
-
-    if(action.type === ADD_VAL){
-        let oNewState = JSON.parse(JSON.stringify(state))
-
-        if(oNewState.sTodo.trim()===''){
-            alert('请输入关键字')
-            oNewState.sTodo=''
+        // 判断是否添加重复的商品
+        let FindGoods = oNewState.find((item) => { return item.id === action.value.id })
+        if (FindGoods) {
+            FindGoods.num += 1;
             return oNewState;
         }
 
-        oNewState.aList.unshift(oNewState.sTodo.trim())
-        oNewState.sTodo=''
+
+        oNewState.unshift(action.value)
         return oNewState;
     }
 
-    if(action.type === DEL_VAL){
+    if (action.type === 'change_num') {
         let oNewState = JSON.parse(JSON.stringify(state))
-        oNewState.aList.splice(action.value,1)
+        let good = oNewState.find((item) => {
+            return item.id === action.GoodId
+        })
 
-        return oNewState;
+        good.num = action.value
+        return oNewState
+
     }
-    return state;
+
+    if (action.type === 'del_val') {
+        let oNewState = JSON.parse(JSON.stringify(state))
+
+        let good = oNewState.filter((item) => {
+            return item.id !== action.id
+        })
+
+        return good
+
+    }
 }
 
 export default reducer;
