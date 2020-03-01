@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Breadcrumb, Table, InputNumber, Button } from 'element-react'
 import store from '../store/index'
-
-// 导入react-redux
-import { connect } from 'react-redux'
 class Cart extends Component {
     constructor(props) {
         super(props)
@@ -26,7 +23,7 @@ class Cart extends Component {
                     label: '数量',
                     prop: 'num',
                     render: dat => {
-                        return <InputNumber size="small" min={1} value={dat.num} defaultValue={dat.num} onChange={(value) => { this.props.fnNumChange(value, dat.id) }}></InputNumber>
+                        return <InputNumber size="small" min={1} value={dat.num} defaultValue={dat.num} onChange={(value) => { this.fnNumChange(value, dat.id) }}></InputNumber>
                     }
 
                 },
@@ -44,13 +41,65 @@ class Cart extends Component {
                 {
                     label: '操作',
                     render: dat => {
-                        return <Button type="danger" size="small" onClick={() => this.props.fnDel(dat.id)}>删除</Button>
+                        return <Button type="danger" size="small" onClick={()=>this.fnDel(dat.id) }>删除</Button>
                     }
 
                 },
-            ]
+            ],
+            // data:[
+            //     {
+            //         "id": 1001,
+            //         "goods_name": "男式黑白格子衬衫",
+            //         "url": "./static/images/clothes01.jpg",
+            //         "price": 169,
+            //         "num": 1
+            //     }
+            // ]
+
+            data: store.getState(),
+            countPrice : this.changeCountPrice()
         }
+        this.unsubscribe = store.subscribe(this.fnStoreChange)
     }
+
+    componentWillUnmount() {
+        this.unsubscribe()
+    }
+    // 数据仓库改变时调用的方法
+    fnStoreChange = () => {
+        this.setState({
+            data: store.getState(),
+            countPrice:this.changeCountPrice()
+        })
+    }
+    // 计数器改变时调用的方法
+    fnNumChange = (value, GoodId) => {
+        store.dispatch({
+            type: 'change_num',
+            value,
+            GoodId
+        })
+    }
+
+    // 计算总价
+    changeCountPrice=()=>{
+        let aGoods_list = store.getState();
+        let iTotalPrice = 0;
+        if(!aGoods_list) return iTotalPrice;
+
+        aGoods_list.map(item=>{
+            iTotalPrice += item.num * item.price
+        })
+        return iTotalPrice;
+    }
+
+    // 删除当前商品
+    fnDel=(id)=>{
+        store.dispatch({
+            type:'del_val',id
+        })
+    }
+
     render() {
         return (
             <div>
@@ -62,48 +111,16 @@ class Cart extends Component {
                     className='mp10'
                     style={{ width: '100%' }}
                     columns={this.state.columns}
-                    data={this.props.data}
+                    data={this.state.data}
                     border={true}
                     highlightCurrentRow={true}
                 />
                 <div className='price'>
-                    <b>{this.props.countPrice}</b>
+                    <b>{this.state.countPrice}</b>
                 </div>
             </div>
         );
     }
 }
-const mapStateToProps = (state) => {
-    // 计算总价
-    let changeCountPrice = () => {
-        let iTotalPrice = 0;
-        state.map(item => {
-            iTotalPrice += item.num * item.price
-        })
-        return iTotalPrice;
-    }
-    return {
-        countPrice: changeCountPrice(),
-        data: state,
-    }
 
-}
-const mapDispatchToProps = (dispatch) => {
-    return {
-        // 计数器改变时调用的方法
-        fnNumChange(value, GoodId){
-            dispatch({
-                type: 'change_num',
-                value,
-                GoodId
-            })
-        },
-        // 删除当前商品
-        fnDel(id){
-            dispatch({
-                type: 'del_val', id
-            })
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default Cart;

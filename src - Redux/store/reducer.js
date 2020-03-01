@@ -9,6 +9,8 @@ let reducer = (state = [], action) => {
             FindGoods.num += 1;
             return oNewState;
         }
+
+
         oNewState.unshift(action.value)
         return oNewState;
     }
@@ -34,8 +36,6 @@ let reducer = (state = [], action) => {
         return good
 
     }
-
-    return state;
 }
 
 export default reducer;

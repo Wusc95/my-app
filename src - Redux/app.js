@@ -15,37 +15,34 @@ import List from './component/list'
 import Cart from './component/cart'
 // 导入图片
 import banner from './static/images/banner.png'
-
-// 导入react-redux
-import { connect } from 'react-redux'
 class App extends Component {
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         count: 0
-    //     }
-    //     this.unsubscribe = store.subscribe(this.fnChangeStore)
-    // }
-    // componentWillUnmount() {
-    //     this.unsubscribe();
-    // }
-    // fnChangeStore = () => {
-    //     let Goods = store.getState();
-    //     let iTotalData = 0;
-    //     for (let i = 0; i < Goods.length; i++) {
-    //         iTotalData += Goods[i].num
-    //     }
-    //     this.setState({
-    //         count: iTotalData
-    //     })
-    // }
+    constructor(props){
+        super(props)
+        this.state={
+            count:0
+        }
+        this.unsubscribe=store.subscribe(this.fnChangeStore)
+    }
+    componentWillUnmount(){
+        this.unsubscribe();
+    }
+    fnChangeStore=()=>{
+        let Goods = store.getState();
+        let iTotalData=0;
+        for (let i = 0; i < Goods.length; i++) {
+           iTotalData+=Goods[i].num
+        }
+        this.setState({
+            count:iTotalData
+        })
+    }
     render() {
         return (
             <div className='wrap'>
                 <img className='banner' src={banner} alt='' />
                 <div className='menu'>
                     <Button className='link' type="success"><a href='#/list'>商品列表</a></Button>
-                    <Badge value={this.props.count}>
+                    <Badge value={this.state.count}>
                         <Button className='link' type="success"><a href='#/cart'>购物车</a></Button>
                     </Badge>
                 </div>
@@ -65,7 +62,7 @@ class App extends Component {
 }
 
 // 定义404页面
-function NotFound() {
+function NotFound(){
     return (
         <div>
             <h1>页面未找到</h1>
@@ -73,19 +70,4 @@ function NotFound() {
     )
 }
 
-const mapStateToProps = (state) => {
-    let getCount = () => {
-        let iTotalData = 0
-        state.map((item) => {
-            iTotalData += item.num
-        })
-        return iTotalData;
-    }
-
-    return {
-        count : getCount()
-    }
-
-}
-
-export default connect(mapStateToProps,null)(App);
+export default App;

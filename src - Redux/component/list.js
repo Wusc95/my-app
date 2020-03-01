@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Breadcrumb, Layout, Card, Button } from 'element-react'
 
-// 导入react-redux
-import { connect } from 'react-redux'
 // 导入图片
 // import clothes01 from '../static/images/clothes01.jpg'
 // import clothes02 from '../static/images/clothes02.jpg'
@@ -49,10 +47,10 @@ class List extends Component {
             }
         }
     }
-    AddGoods = (obj) => {
+    AddGoods=(obj)=>{
         store.dispatch({
-            type: 'add_goods',
-            value: obj
+            type:'add_goods',
+            value:obj
         })
     }
     render() {
@@ -65,7 +63,7 @@ class List extends Component {
                 <Layout.Row gutter="20" className='mp10'>
 
                     {
-                        this.props.data.aGoods_list.map((item, index) => {
+                        this.state.data.aGoods_list.map((item, index) => {
                             return (
                                 <Layout.Col span="6" key={item.id}><div className="grid-content bg-purple" >
                                     <Card bodyStyle={{ padding: 0 }}>
@@ -74,7 +72,7 @@ class List extends Component {
                                             <span style={{ fontSize: 13 }}>{item.goods_name}</span>
                                             <div className="bottom clearfix">
                                                 <p className='mp10' style={{ color: 'red' }}>￥<span style={{ fontSize: 22 }}>{item.price}</span></p>
-                                                <Button size="small" type="danger" className="button" onClick={() => { this.props.AddGoods(item) }}>加入购物车</Button>
+                                                <Button size="small" type="danger" className="button" onClick={()=>{this.AddGoods(item)}}>加入购物车</Button>
                                             </div>
                                         </div>
                                     </Card>
@@ -128,50 +126,5 @@ class List extends Component {
         );
     }
 }
-const mapStateToProps = (state) => {
-    return {
-        data: {
-            aGoods_list: [
-                {
-                    "id": 1001,
-                    "goods_name": "男式黑白格子衬衫",
-                    "url": "./static/images/clothes01.jpg",
-                    "price": 169,
-                    "num": 1
-                },
-                {
-                    "id": 1002,
-                    "goods_name": "纯棉印花宽松长袖T恤",
-                    "url": "./static/images/clothes02.jpg",
-                    "price": 69,
-                    "num": 1
-                },
-                {
-                    "id": 1003,
-                    "goods_name": "男士连帽夹克2019春季新款",
-                    "url": "./static/images/clothes03.jpg",
-                    "price": 249,
-                    "num": 1
-                },
-                {
-                    "id": 1004,
-                    "goods_name": "2019夏装新品时尚百搭",
-                    "url": "./static/images/clothes04.jpg",
-                    "price": 49,
-                    "num": 1
-                }
-            ]
-        }
-    }
-}
-const mapDispatchProps = (dispatch) => {
-    return {
-        AddGoods(obj){
-            dispatch({
-                type: 'add_goods',
-                value: obj
-            })
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchProps)(List);
+
+export default List;
